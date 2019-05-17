@@ -277,7 +277,6 @@ func (s *handlerSuite) TestMessageHandler_HandleGetChildren_Redirects() {
 func (s *handlerSuite) TestMessageHandler_HandleGetDelegate_FetchesIndexFromHeavy() {
 	mc := minimock.NewController(s.T())
 	defer mc.Finish()
-	jetID := insolar.ID(*insolar.NewJetID(0, nil))
 
 	pendingMock := recentstorage.NewPendingStorageMock(s.T())
 	pendingMock.GetRequestsForObjectMock.Return(nil)
@@ -311,6 +310,10 @@ func (s *handlerSuite) TestMessageHandler_HandleGetDelegate_FetchesIndexFromHeav
 		AsType: delegateType,
 	}
 
+	fakeParcel := testutils.NewParcelMock(mc)
+	fakeParcel.MessageMock.Return(&msg)
+	fakeParcel.PulseMock.Return(insolar.FirstPulseNumber)
+
 	mb.SendFunc = func(c context.Context, gm insolar.Message, o *insolar.MessageSendOptions) (r insolar.Reply, r1 error) {
 		if m, ok := gm.(*message.GetObjectIndex); ok {
 			assert.Equal(s.T(), msg.Head, m.Object)
@@ -328,10 +331,8 @@ func (s *handlerSuite) TestMessageHandler_HandleGetDelegate_FetchesIndexFromHeav
 
 	heavyRef := genRandomRef(0)
 	jc.HeavyMock.Return(heavyRef, nil)
-	rep, err := h.handleGetDelegate(contextWithJet(s.ctx, jetID), &message.Parcel{
-		Msg:         &msg,
-		PulseNumber: insolar.FirstPulseNumber,
-	})
+
+	rep, err := h.FlowDispatcher.WrapBusHandle(s.ctx, fakeParcel)
 	require.NoError(s.T(), err)
 	delegateRep, ok := rep.(*reply.Delegate)
 	require.True(s.T(), ok)
