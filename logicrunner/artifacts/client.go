@@ -287,7 +287,7 @@ func (m *client) GetPendingRequest(ctx context.Context, objectID insolar.ID) (in
 			return nil, fmt.Errorf("GetPendingRequest: unexpected message: %#v", r)
 		}
 
-		return &message.Parcel{ Msg: &message.CallMethod{Request: *castedRecord} }, nil
+		return &message.Parcel{Msg: &message.CallMethod{Request: *castedRecord}}, nil
 	case *reply.Error:
 		return nil, r.Error()
 	default:
