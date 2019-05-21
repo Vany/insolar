@@ -23,7 +23,7 @@ import (
 type HostNetworkMock struct {
 	t minimock.Tester
 
-	BuildResponseFunc       func(p context.Context, p1 network.Request, p2 interface{}) (r network.Response)
+	BuildResponseFunc       func(p context.Context, p1 network.Packet, p2 interface{}) (r network.Packet)
 	BuildResponseCounter    uint64
 	BuildResponsePreCounter uint64
 	BuildResponseMock       mHostNetworkMockBuildResponse
@@ -48,12 +48,12 @@ type HostNetworkMock struct {
 	RegisterRequestHandlerPreCounter uint64
 	RegisterRequestHandlerMock       mHostNetworkMockRegisterRequestHandler
 
-	SendRequestFunc       func(p context.Context, p1 network.Request, p2 insolar.Reference) (r network.Future, r1 error)
+	SendRequestFunc       func(p context.Context, p1 network.Packet, p2 insolar.Reference) (r network.Future, r1 error)
 	SendRequestCounter    uint64
 	SendRequestPreCounter uint64
 	SendRequestMock       mHostNetworkMockSendRequest
 
-	SendRequestToHostFunc       func(p context.Context, p1 network.Request, p2 *host.Host) (r network.Future, r1 error)
+	SendRequestToHostFunc       func(p context.Context, p1 network.Packet, p2 *host.Host) (r network.Future, r1 error)
 	SendRequestToHostCounter    uint64
 	SendRequestToHostPreCounter uint64
 	SendRequestToHostMock       mHostNetworkMockSendRequestToHost
@@ -103,16 +103,16 @@ type HostNetworkMockBuildResponseExpectation struct {
 
 type HostNetworkMockBuildResponseInput struct {
 	p  context.Context
-	p1 network.Request
+	p1 network.Packet
 	p2 interface{}
 }
 
 type HostNetworkMockBuildResponseResult struct {
-	r network.Response
+	r network.Packet
 }
 
 //Expect specifies that invocation of HostNetwork.BuildResponse is expected from 1 to Infinity times
-func (m *mHostNetworkMockBuildResponse) Expect(p context.Context, p1 network.Request, p2 interface{}) *mHostNetworkMockBuildResponse {
+func (m *mHostNetworkMockBuildResponse) Expect(p context.Context, p1 network.Packet, p2 interface{}) *mHostNetworkMockBuildResponse {
 	m.mock.BuildResponseFunc = nil
 	m.expectationSeries = nil
 
@@ -124,7 +124,7 @@ func (m *mHostNetworkMockBuildResponse) Expect(p context.Context, p1 network.Req
 }
 
 //Return specifies results of invocation of HostNetwork.BuildResponse
-func (m *mHostNetworkMockBuildResponse) Return(r network.Response) *HostNetworkMock {
+func (m *mHostNetworkMockBuildResponse) Return(r network.Packet) *HostNetworkMock {
 	m.mock.BuildResponseFunc = nil
 	m.expectationSeries = nil
 
@@ -136,7 +136,7 @@ func (m *mHostNetworkMockBuildResponse) Return(r network.Response) *HostNetworkM
 }
 
 //ExpectOnce specifies that invocation of HostNetwork.BuildResponse is expected once
-func (m *mHostNetworkMockBuildResponse) ExpectOnce(p context.Context, p1 network.Request, p2 interface{}) *HostNetworkMockBuildResponseExpectation {
+func (m *mHostNetworkMockBuildResponse) ExpectOnce(p context.Context, p1 network.Packet, p2 interface{}) *HostNetworkMockBuildResponseExpectation {
 	m.mock.BuildResponseFunc = nil
 	m.mainExpectation = nil
 
@@ -146,12 +146,12 @@ func (m *mHostNetworkMockBuildResponse) ExpectOnce(p context.Context, p1 network
 	return expectation
 }
 
-func (e *HostNetworkMockBuildResponseExpectation) Return(r network.Response) {
+func (e *HostNetworkMockBuildResponseExpectation) Return(r network.Packet) {
 	e.result = &HostNetworkMockBuildResponseResult{r}
 }
 
 //Set uses given function f as a mock of HostNetwork.BuildResponse method
-func (m *mHostNetworkMockBuildResponse) Set(f func(p context.Context, p1 network.Request, p2 interface{}) (r network.Response)) *HostNetworkMock {
+func (m *mHostNetworkMockBuildResponse) Set(f func(p context.Context, p1 network.Packet, p2 interface{}) (r network.Packet)) *HostNetworkMock {
 	m.mainExpectation = nil
 	m.expectationSeries = nil
 
@@ -160,7 +160,7 @@ func (m *mHostNetworkMockBuildResponse) Set(f func(p context.Context, p1 network
 }
 
 //BuildResponse implements github.com/insolar/insolar/network.HostNetwork interface
-func (m *HostNetworkMock) BuildResponse(p context.Context, p1 network.Request, p2 interface{}) (r network.Response) {
+func (m *HostNetworkMock) BuildResponse(p context.Context, p1 network.Packet, p2 interface{}) (r network.Packet) {
 	counter := atomic.AddUint64(&m.BuildResponsePreCounter, 1)
 	defer atomic.AddUint64(&m.BuildResponseCounter, 1)
 
@@ -791,7 +791,7 @@ type HostNetworkMockSendRequestExpectation struct {
 
 type HostNetworkMockSendRequestInput struct {
 	p  context.Context
-	p1 network.Request
+	p1 network.Packet
 	p2 insolar.Reference
 }
 
@@ -801,7 +801,7 @@ type HostNetworkMockSendRequestResult struct {
 }
 
 //Expect specifies that invocation of HostNetwork.SendRequest is expected from 1 to Infinity times
-func (m *mHostNetworkMockSendRequest) Expect(p context.Context, p1 network.Request, p2 insolar.Reference) *mHostNetworkMockSendRequest {
+func (m *mHostNetworkMockSendRequest) Expect(p context.Context, p1 network.Packet, p2 insolar.Reference) *mHostNetworkMockSendRequest {
 	m.mock.SendRequestFunc = nil
 	m.expectationSeries = nil
 
@@ -825,7 +825,7 @@ func (m *mHostNetworkMockSendRequest) Return(r network.Future, r1 error) *HostNe
 }
 
 //ExpectOnce specifies that invocation of HostNetwork.SendRequest is expected once
-func (m *mHostNetworkMockSendRequest) ExpectOnce(p context.Context, p1 network.Request, p2 insolar.Reference) *HostNetworkMockSendRequestExpectation {
+func (m *mHostNetworkMockSendRequest) ExpectOnce(p context.Context, p1 network.Packet, p2 insolar.Reference) *HostNetworkMockSendRequestExpectation {
 	m.mock.SendRequestFunc = nil
 	m.mainExpectation = nil
 
@@ -840,7 +840,7 @@ func (e *HostNetworkMockSendRequestExpectation) Return(r network.Future, r1 erro
 }
 
 //Set uses given function f as a mock of HostNetwork.SendRequest method
-func (m *mHostNetworkMockSendRequest) Set(f func(p context.Context, p1 network.Request, p2 insolar.Reference) (r network.Future, r1 error)) *HostNetworkMock {
+func (m *mHostNetworkMockSendRequest) Set(f func(p context.Context, p1 network.Packet, p2 insolar.Reference) (r network.Future, r1 error)) *HostNetworkMock {
 	m.mainExpectation = nil
 	m.expectationSeries = nil
 
@@ -849,7 +849,7 @@ func (m *mHostNetworkMockSendRequest) Set(f func(p context.Context, p1 network.R
 }
 
 //SendRequest implements github.com/insolar/insolar/network.HostNetwork interface
-func (m *HostNetworkMock) SendRequest(p context.Context, p1 network.Request, p2 insolar.Reference) (r network.Future, r1 error) {
+func (m *HostNetworkMock) SendRequest(p context.Context, p1 network.Packet, p2 insolar.Reference) (r network.Future, r1 error) {
 	counter := atomic.AddUint64(&m.SendRequestPreCounter, 1)
 	defer atomic.AddUint64(&m.SendRequestCounter, 1)
 
@@ -943,7 +943,7 @@ type HostNetworkMockSendRequestToHostExpectation struct {
 
 type HostNetworkMockSendRequestToHostInput struct {
 	p  context.Context
-	p1 network.Request
+	p1 network.Packet
 	p2 *host.Host
 }
 
@@ -953,7 +953,7 @@ type HostNetworkMockSendRequestToHostResult struct {
 }
 
 //Expect specifies that invocation of HostNetwork.SendRequestToHost is expected from 1 to Infinity times
-func (m *mHostNetworkMockSendRequestToHost) Expect(p context.Context, p1 network.Request, p2 *host.Host) *mHostNetworkMockSendRequestToHost {
+func (m *mHostNetworkMockSendRequestToHost) Expect(p context.Context, p1 network.Packet, p2 *host.Host) *mHostNetworkMockSendRequestToHost {
 	m.mock.SendRequestToHostFunc = nil
 	m.expectationSeries = nil
 
@@ -977,7 +977,7 @@ func (m *mHostNetworkMockSendRequestToHost) Return(r network.Future, r1 error) *
 }
 
 //ExpectOnce specifies that invocation of HostNetwork.SendRequestToHost is expected once
-func (m *mHostNetworkMockSendRequestToHost) ExpectOnce(p context.Context, p1 network.Request, p2 *host.Host) *HostNetworkMockSendRequestToHostExpectation {
+func (m *mHostNetworkMockSendRequestToHost) ExpectOnce(p context.Context, p1 network.Packet, p2 *host.Host) *HostNetworkMockSendRequestToHostExpectation {
 	m.mock.SendRequestToHostFunc = nil
 	m.mainExpectation = nil
 
@@ -992,7 +992,7 @@ func (e *HostNetworkMockSendRequestToHostExpectation) Return(r network.Future, r
 }
 
 //Set uses given function f as a mock of HostNetwork.SendRequestToHost method
-func (m *mHostNetworkMockSendRequestToHost) Set(f func(p context.Context, p1 network.Request, p2 *host.Host) (r network.Future, r1 error)) *HostNetworkMock {
+func (m *mHostNetworkMockSendRequestToHost) Set(f func(p context.Context, p1 network.Packet, p2 *host.Host) (r network.Future, r1 error)) *HostNetworkMock {
 	m.mainExpectation = nil
 	m.expectationSeries = nil
 
@@ -1001,7 +1001,7 @@ func (m *mHostNetworkMockSendRequestToHost) Set(f func(p context.Context, p1 net
 }
 
 //SendRequestToHost implements github.com/insolar/insolar/network.HostNetwork interface
-func (m *HostNetworkMock) SendRequestToHost(p context.Context, p1 network.Request, p2 *host.Host) (r network.Future, r1 error) {
+func (m *HostNetworkMock) SendRequestToHost(p context.Context, p1 network.Packet, p2 *host.Host) (r network.Future, r1 error) {
 	counter := atomic.AddUint64(&m.SendRequestToHostPreCounter, 1)
 	defer atomic.AddUint64(&m.SendRequestToHostCounter, 1)
 

@@ -154,7 +154,6 @@ type NodeBootstrapRequest struct {
 }
 
 type NodeBootstrapResponse struct {
-	Code         Code
 	RejectReason string
 	// ETA - promise to accept joiner node to the network (in seconds).
 	ETA int
@@ -177,15 +176,6 @@ type GenesisResponse struct {
 	Response GenesisRequest
 	Error    string
 }
-
-type Code uint8
-
-const (
-	Accepted = Code(iota + 1)
-	Rejected
-	Redirected
-	ReconnectRequired
-)
 
 func init() {
 	gob.Register(&NodeBootstrapRequest{})
@@ -585,7 +575,7 @@ func (bc *bootstrapper) StopCyclicBootstrap() {
 	atomic.StoreInt32(&bc.cyclicBootstrapStop, 1)
 }
 
-func (bc *bootstrapper) processBootstrap(ctx context.Context, request network.Request) (network.Response, error) {
+func (bc *bootstrapper) processBootstrap(ctx context.Context, request network.Packet) (network.Packet, error) {
 	var code Code
 	if bc.Gatewayer.Gateway().GetState() == insolar.CompleteNetworkState {
 		code = ReconnectRequired
@@ -618,7 +608,7 @@ func (bc *bootstrapper) processBootstrap(ctx context.Context, request network.Re
 		}), nil
 }
 
-func (bc *bootstrapper) processGenesis(ctx context.Context, request network.Request) (network.Response, error) {
+func (bc *bootstrapper) processGenesis(ctx context.Context, request network.Packet) (network.Packet, error) {
 	data := request.GetData().(*GenesisRequest)
 	discovery, err := bc.NodeKeeper.GetOriginJoinClaim()
 	if err != nil {

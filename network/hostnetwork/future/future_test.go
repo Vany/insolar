@@ -148,7 +148,7 @@ func TestFuture_Cancel(t *testing.T) {
 
 func TestFuture_WaitResponse_Cancel(t *testing.T) {
 	n, _ := host.NewHost("127.0.0.1:8080")
-	c := make(chan network.Response)
+	c := make(chan network.Packet)
 	var f Future = &future{
 		response:       c,
 		receiver:       n,
@@ -166,7 +166,7 @@ func TestFuture_WaitResponse_Cancel(t *testing.T) {
 
 func TestFuture_WaitResponse_Timeout(t *testing.T) {
 	n, _ := host.NewHost("127.0.0.1:8080")
-	c := make(chan network.Response)
+	c := make(chan network.Packet)
 	cancelled := false
 	var f Future = &future{
 		response:       c,
@@ -183,7 +183,7 @@ func TestFuture_WaitResponse_Timeout(t *testing.T) {
 
 func TestFuture_WaitResponse_Success(t *testing.T) {
 	n, _ := host.NewHost("127.0.0.1:8080")
-	c := make(chan network.Response, 1)
+	c := make(chan network.Packet, 1)
 	var f Future = &future{
 		response:       c,
 		receiver:       n,

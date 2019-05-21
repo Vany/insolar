@@ -301,8 +301,8 @@ func (rpc *rpcController) SendMessage(nodeID insolar.Reference, name string, msg
 	return data.Result, nil
 }
 
-func (rpc *rpcController) processMessage(ctx context.Context, request network.Request) (network.Response, error) {
-	ctx = insmetrics.InsertTag(ctx, tagPacketType, request.GetType().String())
+func (rpc *rpcController) processMessage(ctx context.Context, request network.Packet) (network.Packet, error) {
+	ctx = insmetrics.InsertTag(ctx, tagPacketType, request.Type.String())
 	stats.Record(ctx, statPacketsReceived.M(1))
 
 	payload := request.GetData().(*RequestRPC)
@@ -313,7 +313,7 @@ func (rpc *rpcController) processMessage(ctx context.Context, request network.Re
 	return rpc.Network.BuildResponse(ctx, request, &ResponseRPC{Success: true, Result: result}), nil
 }
 
-func (rpc *rpcController) processCascade(ctx context.Context, request network.Request) (network.Response, error) {
+func (rpc *rpcController) processCascade(ctx context.Context, request network.Packet) (network.Packet, error) {
 	payload := request.GetData().(*RequestCascade)
 	ctx, logger := inslogger.WithTraceField(ctx, payload.TraceID)
 

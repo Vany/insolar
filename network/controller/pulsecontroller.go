@@ -91,7 +91,7 @@ func (pc *pulseController) Init(ctx context.Context) error {
 	return nil
 }
 
-func (pc *pulseController) processPulse(ctx context.Context, request network.Request) (network.Response, error) {
+func (pc *pulseController) processPulse(ctx context.Context, request network.Packet) (network.Packet, error) {
 	data := request.GetData().(*packet.RequestPulse)
 	verified, err := pc.verifyPulseSign(data.Pulse)
 	if err != nil {

@@ -71,7 +71,7 @@ type flakyNetwork struct {
 	network.HostNetwork
 }
 
-func (fn *flakyNetwork) SendRequestToHost(ctx context.Context, request network.Request, receiver *host.Host) (network.Future, error) {
+func (fn *flakyNetwork) SendRequestToHost(ctx context.Context, request network.Packet, receiver *host.Host) (network.Future, error) {
 	multiplier := time.Duration(rand.Int() % flakyLimit) //nolint
 	time.Sleep(time.Millisecond * multiplier)
 	return fn.HostNetwork.SendRequestToHost(ctx, request, receiver)
